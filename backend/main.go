@@ -2,11 +2,21 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 )
 
 func main() {
-	fmt.Println("Hello, World!")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	mux := http.NewServeMux()
+
+	mux.HandleFunc("POST /healthz", func(w http.ResponseWriter, r *http.Request) {
+		respondWithJSON(w, http.StatusOK, map[string]string{"message": "Healthy"})
+	})
+
+	server := http.Server{
+		Addr:    ":8080",
+		Handler: mux,
+	}
+
+	fmt.Println("Server is running on port 8080")
+	server.ListenAndServe()
 }
