@@ -14,11 +14,7 @@ export default function LandingPage() {
     
     try {
 
-      const response = await fetch('http://localhost:8080/healthz', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: await JSON.stringify({ "name": politicianName }),
-      })
+      const response = await fetch('http://localhost:8080/api/data?name=' + politicianName)
       const data = await response.json()
 
       setPoliticianInfo(data.message)

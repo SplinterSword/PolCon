@@ -8,9 +8,7 @@ import (
 func main() {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("POST /healthz", func(w http.ResponseWriter, r *http.Request) {
-		respondWithJSON(w, http.StatusOK, map[string]string{"message": "Healthy"})
-	})
+	mux.HandleFunc("GET /api/data", getData)
 
 	server := http.Server{
 		Addr:    ":8080",
