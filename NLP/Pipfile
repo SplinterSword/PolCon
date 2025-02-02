@@ -8,6 +8,7 @@ spacy = "*"
 flask = "*"
 requests = "*"
 openai = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

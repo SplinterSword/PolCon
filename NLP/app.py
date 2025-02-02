@@ -1,10 +1,13 @@
 from flask import Flask, request, jsonify
+from dotenv import load_dotenv
 import requests
+import os
 
 app = Flask(__name__)
 
 # Replace with your OpenAI API Key
-OPENAI_API_KEY = "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"
+
+OPENAI_API_KEY = os.getenv('OPENAI_KEY')
 
 def analyze_contradictions(name, text_articles):
     """
