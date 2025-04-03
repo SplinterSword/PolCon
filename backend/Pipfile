@@ -1,0 +1,24 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+uvicorn = "*"
+pydantic = "*"
+feedparser = "*"
+newspaper3k = "*"
+lxml-html-clean = "*"
+python-dotenv = "*"
+selenium = "*"
+webdriver-manager = "*"
+google-cloud = "*"
+google-cloud-aiplatform = "*"
+google-generativeai = "*"
+google-genai = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.13"
