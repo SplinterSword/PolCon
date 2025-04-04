@@ -1,6 +1,7 @@
 from utils.get_contradictory_news import get_contradiction_news
 from fastapi import FastAPI
 from pydantic import BaseModel
+import os
 
 app = FastAPI()
 
@@ -20,6 +21,8 @@ def read_item(politician: Politician):
     contradictions = get_contradiction_news(name)
     return contradictions
 
+port = int(os.environ.get("PORT", 8080))
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=port)
