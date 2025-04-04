@@ -1,5 +1,4 @@
 from utils.get_contradictory_news import get_contradiction_news
-from utils.article_scraper import scrape_feed
 from fastapi import FastAPI
 from pydantic import BaseModel
 
