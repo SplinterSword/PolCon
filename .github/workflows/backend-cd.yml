@@ -28,4 +28,4 @@ jobs:
                 gcloud builds submit --tag us-central1-docker.pkg.dev/my-portfolio-441113/polcon-backend/polcon-backend:latest
 
             - name: Deploy to Cloud Run
-              run: gcloud run deploy portfolio --image us-central1-docker.pkg.dev/my-portfolio-441113/polcon-backend/polcon-backend:latest --region us-central1 --allow-unauthenticated --project my-portfolio-441113 --max-instances=4 --set-secrets=GOOGLE_GEMINI_API_KEY=GOOGLE_GEMINI_API_KEY:latest 
+              run: gcloud run deploy polcon-backend --image us-central1-docker.pkg.dev/my-portfolio-441113/polcon-backend/polcon-backend:latest --region us-central1 --allow-unauthenticated --project my-portfolio-441113 --max-instances=4 --set-secrets=GOOGLE_GEMINI_API_KEY=GOOGLE_GEMINI_API_KEY:latest 
