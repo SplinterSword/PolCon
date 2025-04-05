@@ -21,7 +21,7 @@ def read_item(politician: Politician):
     contradictions = get_contradiction_news(name)
     return contradictions
 
-port = int(os.environ.get("PORT", 8080))
+port = int(os.environ.get("PORT", 8000))
 
 if __name__ == "__main__":
     import uvicorn
