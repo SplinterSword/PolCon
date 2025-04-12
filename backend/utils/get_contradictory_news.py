@@ -1,11 +1,12 @@
-from google import genai
 from dotenv import load_dotenv
+from google import genai
 import json
 import os
 
 load_dotenv()
 
 GOOGLE_GEMINI_API_KEY = os.getenv("GOOGLE_GEMINI_API_KEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 def get_contradiction_news(politician_name: str):
     client = genai.Client(api_key=GOOGLE_GEMINI_API_KEY)
@@ -52,4 +53,3 @@ def get_contradiction_news(politician_name: str):
         return f"Error: Could not parse response as JSON.\nRaw response:\n{response.text}"
     except Exception as e:
         return f"An error occurred: {e}"
-
