@@ -17,6 +17,7 @@ google-cloud = "*"
 google-cloud-aiplatform = "*"
 google-generativeai = "*"
 google-genai = "*"
+groq = "*"
 
 [dev-packages]
 

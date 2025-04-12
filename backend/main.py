@@ -1,4 +1,4 @@
-from utils.get_contradictory_news import get_contradiction_news, get_contradiction_news_groq
+from utils.get_contradictory_news import get_contradiction_news
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from pydantic import BaseModel
