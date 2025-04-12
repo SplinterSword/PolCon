@@ -17,7 +17,7 @@ Polcon does all the heavy lifting for you so you don't have to spend time and en
 
 ## How to use PolCon
 
-1. Visit the url = https://pol-con.vercel.app/.
+1. Visit the url = https://political-gpt-alpha.vercel.app/.
 2. Enter the name of the political figure you want to research in the input field.
 3. Click on the "Get Information" button.
 4. Wait for the information to load.
