@@ -5,21 +5,13 @@ name = "pypi"
 
 [packages]
 fastapi = "*"
-uvicorn = "*"
+uvicorn = {extras = ["standard"], version = "*"}
 pydantic = "*"
-feedparser = "*"
-newspaper3k = "*"
-lxml-html-clean = "*"
 python-dotenv = "*"
-selenium = "*"
-webdriver-manager = "*"
-google-cloud = "*"
-google-cloud-aiplatform = "*"
 google-generativeai = "*"
 google-genai = "*"
-groq = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.13"
+python_version = "3.10"

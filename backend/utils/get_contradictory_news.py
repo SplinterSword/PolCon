@@ -6,7 +6,6 @@ import os
 load_dotenv()
 
 GOOGLE_GEMINI_API_KEY = os.getenv("GOOGLE_GEMINI_API_KEY")
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 def get_contradiction_news(politician_name: str):
     client = genai.Client(api_key=GOOGLE_GEMINI_API_KEY)
