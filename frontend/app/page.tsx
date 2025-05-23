@@ -37,7 +37,7 @@ export default function LandingPage() {
       setIsLoading(true)
       setError(null)
 
-      const reponse = await fetch("http://0.0.0.0:8000/getContradictions", {
+      const reponse = await fetch("https://polcon-backend-544519275637.asia-northeast1.run.app/getContradictions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
