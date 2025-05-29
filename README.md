@@ -65,9 +65,9 @@ Pydantic is used with FastAPI to validate and serialize incoming data based on P
 
 Docker containerizes the backend, making it portable across environments. It ensures that the app runs the same way in development, testing, and production. Docker also simplifies deployment and scaling, which is essential for cloud-native applications.
 
-#### Google Gemini API
+#### Toolhouse AI Agents
 
-The Google Gemini API provides access to a wide range of data, including news, weather, and more. It's a great source of real-time information that can be used to inform decisions.
+Toolhouse AI Agents provide powerful natural language processing capabilities to analyze and extract contradictions from political statements. They enable the system to process and present complex information in an easily understandable format.
 
 #### Google Cloud
 
