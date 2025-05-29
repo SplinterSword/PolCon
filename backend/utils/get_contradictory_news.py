@@ -1,54 +1,41 @@
 from dotenv import load_dotenv
-from google import genai
 import json
 import os
+import requests
+from typing import Dict, Any
 
 load_dotenv()
 
-GOOGLE_GEMINI_API_KEY = os.getenv("GOOGLE_GEMINI_API_KEY")
-
-def get_contradiction_news(politician_name: str):
-    client = genai.Client(api_key=GOOGLE_GEMINI_API_KEY)
-
-    prompt = f"""
-    Find all contradictions made by {politician_name}. The response must be a JSON object formatted as follows:
-
-    {{
-      "contradictions": [
-        {{
-          "contradiction_id": 1,
-          "topic": "Example Topic",
-          "statement_1": "First statement made by the politician.",
-          "statement_2": "Second, contradictory statement made by the politician.",
-          "summary": "Summary of how the statements contradict each other.",
-          "articles": [
-            "https://example.com/article1",
-            "https://example.com/article2"
-          ]
-        }},
-        ...
-      ]
-    }}
-
-    Ensure that:
-    - There are at least 5 contradictions.
-    - The JSON output strictly follows the given structure.
-    - Each contradiction has a valid topic, statements, and a summary.
-    - Each contradiction includes at least one credible article as a source.
+def get_contradiction_news(politician_name: str) -> Dict[str, Any]:
     """
-
-    response = client.models.generate_content(
-        model="gemini-2.0-flash",
-        contents= prompt
-    )
-
-    cleaned_json = response.text.replace("```json", "").replace("```", "").strip()
-
+    Fetches contradictory statements made by a politician from the Toolhouse AI API.
+    
+    Args:
+        politician_name: The name of the politician to search for contradictions
+        
+    Returns:
+        dict: A dictionary containing the API response with contradictions data
+    """
     try:
-        json_data = json.loads(cleaned_json)
-        return json_data
-    except json.JSONDecodeError:
-        # If parsing fails, return the raw text response.
-        return f"Error: Could not parse response as JSON.\nRaw response:\n{response.text}"
+        try:
+            response = requests.post(
+                "https://agents.toolhouse.ai/3b753125-77ee-4332-8ba0-1dca1daeca27",
+                json={"vars": {"politician_name": politician_name}}
+            )
+            response.raise_for_status()
+            
+            response_text = response.text.strip()
+            if '```json' in response_text:
+                json_str = response_text.split('```json')[1].split('```')[0].strip()
+            else:
+                json_str = response_text
+                
+            return json.loads(json_str)
+            
+        except (json.JSONDecodeError, IndexError) as e:
+            return {"error": "Failed to parse API response", "details": str(e), "raw_response": response_text}
+        except requests.RequestException as e:
+            return {"error": "API request failed", "details": str(e)}
+            
     except Exception as e:
-        return f"An error occurred: {e}"
+        return {"error": f"An unexpected error occurred: {str(e)}"}

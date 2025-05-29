@@ -8,8 +8,7 @@ fastapi = "*"
 uvicorn = {extras = ["standard"], version = "*"}
 pydantic = "*"
 python-dotenv = "*"
-google-generativeai = "*"
-google-genai = "*"
+requests = "*"
 
 [dev-packages]
 
