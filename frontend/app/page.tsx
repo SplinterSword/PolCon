@@ -17,6 +17,8 @@ type Contradiction = {
   articles: string[]
 }
 
+const backendBaseUrl = process.env.NEXT_PUBLIC_BACKEND_URL?.replace(/\/$/, "")
+
 export default function LandingPage() {
   const [politicianName, setPoliticianName] = useState("")
   const [politicianDisplayName, setPoliticianDisplayName] = useState("")
@@ -37,7 +39,11 @@ export default function LandingPage() {
       setIsLoading(true)
       setError(null)
 
-      const reponse = await fetch("https://polcon-backend-544519275637.asia-northeast1.run.app/getContradictions", {
+      if (!backendBaseUrl) {
+        throw new Error("NEXT_PUBLIC_BACKEND_URL is not configured.")
+      }
+
+      const reponse = await fetch(`${backendBaseUrl}/getContradictions`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -163,4 +169,3 @@ export default function LandingPage() {
       </>
   )
 }
-
