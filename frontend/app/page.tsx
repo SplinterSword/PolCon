@@ -17,6 +17,16 @@ type Contradiction = {
   articles: string[]
 }
 
+type ContradictionsApiResponse =
+  | {
+      contradictions: Contradiction[]
+      conversation_history?: unknown
+    }
+  | {
+      error: string
+      details?: string
+    }
+
 const backendBaseUrl = process.env.NEXT_PUBLIC_BACKEND_URL?.replace(/\/$/, "")
 
 export default function LandingPage() {
@@ -38,12 +48,13 @@ export default function LandingPage() {
     try {
       setIsLoading(true)
       setError(null)
+      setPoliticianInfo(null)
 
       if (!backendBaseUrl) {
         throw new Error("NEXT_PUBLIC_BACKEND_URL is not configured.")
       }
 
-      const reponse = await fetch(`${backendBaseUrl}/getContradictions`, {
+      const response = await fetch(`${backendBaseUrl}/getContradictions`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,15 +62,43 @@ export default function LandingPage() {
         body: JSON.stringify({ name: politicianName }),
       })
 
-      const data = await reponse.json()
+      let data: ContradictionsApiResponse
+      try {
+        data = (await response.json()) as ContradictionsApiResponse
+        console.log("API Response:", data)
+      } catch {
+        throw new Error("Failed to parse response from server.")
+      }
+
+      if (!response.ok) {
+        if (data && typeof data === "object" && "error" in data && typeof data.error === "string") {
+          setError(data.details ? `${data.error}: ${data.details}` : data.error)
+          setIsLoading(false)
+          return
+        }
+        setError(`Request failed with status ${response.status}.`)
+        setIsLoading(false)
+        return
+      }
+
+      if (data && typeof data === "object" && "error" in data && typeof data.error === "string") {
+        setError(data.details ? `${data.error}: ${data.details}` : data.error)
+        setIsLoading(false)
+        return
+      }
+
       setIsLoading(false)
       setPoliticianDisplayName(politicianName)
-      setPoliticianInfo(data.contradictions)
+      setPoliticianInfo(
+        data && typeof data === "object" && "contradictions" in data && Array.isArray(data.contradictions)
+          ? data.contradictions
+          : [],
+      )
 
     } catch (error) {
       console.error("Error fetching politician info:", error)
       setIsLoading(false)
-      setError("Error fetching information. Please try again.")
+      setError(error instanceof Error ? error.message : "Error fetching information. Please try again.")
     }
   }
 
@@ -111,6 +150,13 @@ export default function LandingPage() {
           {error && !politicianInfo && (
             <div className="max-w-2xl mx-auto p-4 bg-red-800/50 rounded-lg text-center">
               <p>{error}</p>
+            </div>
+          )}
+
+          {/* Empty State */}
+          {politicianInfo && !error && !isLoading && politicianInfo.length === 0 && (
+            <div className="max-w-2xl mx-auto p-4 bg-white/10 border border-white/20 rounded-lg text-center">
+              <p className="text-white/90">No verified contradictions found for {politicianDisplayName || "this politician"}.</p>
             </div>
           )}
 
