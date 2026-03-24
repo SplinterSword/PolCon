@@ -1,12 +1,7 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
-import { ExternalLink } from "lucide-react"
 
 type Contradiction = {
   contradiction_id: number
@@ -19,13 +14,13 @@ type Contradiction = {
 
 type ContradictionsApiResponse =
   | {
-      contradictions: Contradiction[]
-      conversation_history?: unknown
-    }
+    contradictions: Contradiction[]
+    conversation_history?: unknown
+  }
   | {
-      error: string
-      details?: string
-    }
+    error: string
+    details?: string
+  }
 
 const backendBaseUrl = process.env.NEXT_PUBLIC_BACKEND_URL?.replace(/\/$/, "")
 
@@ -105,113 +100,132 @@ export default function LandingPage() {
   // Return a loading state or nothing until client-side hydration is complete
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-500 via-red-600 to-red-700 text-white">
-        <div className="container mx-auto px-4 py-16 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
-        </div>
+      <div className="min-h-screen bg-[#0b1326] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
       </div>
     )
   }
 
   return (
-      <>
-        <main className="container mx-auto px-4 py-16 md:py-24 space-y-16">
-          {/* Hero Section */}
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-extrabold mb-6">Democracy thrives when ignorance dies</h1>
-            <p className="text-xl md:text-2xl mb-12 opacity-80">
-              Explore the truth behind political figures and make informed decisions.
-            </p>
-          </div>
+    <main className="relative pt-24 min-h-screen">
+      {/* Hero Ambient Glows */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[800px] hero-glow pointer-events-none"></div>
 
-          {/* Politician Search Form */}
-          <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4">
-            <Input
+      {/* Hero Section */}
+      <section className="relative px-6 py-20 md:py-32 flex flex-col items-center text-center max-w-7xl mx-auto">
+        <div className="mb-12">
+          <h1 className="font-headline text-5xl md:text-8xl italic tracking-tight text-on-surface leading-[1.1] mb-8 max-w-5xl">
+            Democracy thrives when <span className="text-primary">ignorance dies</span>
+          </h1>
+          <p className="font-body text-lg md:text-xl text-on-surface-variant max-w-2xl mx-auto font-light leading-relaxed">
+            Explore the truth behind political figures and make informed decisions through sovereign, data-driven intelligence.
+          </p>
+        </div>
+
+        {/* Search Area */}
+        <form onSubmit={handleSubmit} className="w-full max-w-3xl glass-panel p-2 rounded-full flex flex-col md:flex-row items-center gap-2 border border-outline/10 shadow-2xl">
+          <div className="flex-1 flex items-center px-6 w-full">
+            <span className="material-symbols-outlined text-outline mr-3">search</span>
+            <input
+              className="bg-transparent border-none focus:ring-0 text-on-surface w-full font-body placeholder:text-outline-variant text-lg h-14 focus:outline-none"
+              placeholder="Enter a politician's name..."
               type="text"
-              placeholder="Enter politician's name"
               value={politicianName}
               onChange={(e) => setPoliticianName(e.target.value)}
-              className="bg-white/10 border-white/20 text-white placeholder-white/50"
               required
             />
-            <Button type="submit" className="w-full bg-white text-red-600 hover:bg-white/90" disabled={isLoading}>
-              {isLoading ? "Loading..." : "Get Information"}
-            </Button>
-          </form>
+          </div>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full md:w-auto px-8 h-14 bg-gradient-to-r from-primary to-primary-container text-on-primary-container font-bold rounded-full hover:shadow-[0_0_20px_rgba(225,29,72,0.4)] active:scale-95 transition-all duration-300 whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {isLoading ? "Loading..." : "Get Information"}
+          </button>
+        </form>
 
-          {/* Loading Indicator */}
-          {isLoading && (
-            <div className="flex justify-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
-            </div>
-          )}
+        {/* Loading Indicator */}
+        {isLoading && (
+          <div className="flex justify-center mt-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          </div>
+        )}
 
-          {/* Error Message */}
-          {error && !politicianInfo && (
-            <div className="max-w-2xl mx-auto p-4 bg-red-800/50 rounded-lg text-center">
-              <p>{error}</p>
-            </div>
-          )}
+        {/* Error Message */}
+        {error && !politicianInfo && (
+          <div className="mt-12 max-w-2xl mx-auto p-4 bg-error-container/50 border border-error/50 rounded-lg text-center">
+            <p className="text-on-error-container">{error}</p>
+          </div>
+        )}
+      </section>
 
-          {/* Empty State */}
-          {politicianInfo && !error && !isLoading && politicianInfo.length === 0 && (
-            <div className="max-w-2xl mx-auto p-4 bg-white/10 border border-white/20 rounded-lg text-center">
-              <p className="text-white/90">No verified contradictions found for {politicianDisplayName || "this politician"}.</p>
-            </div>
-          )}
+      {/* Empty State */}
+      {politicianInfo && !error && !isLoading && politicianInfo.length === 0 && (
+        <section className="relative px-6 pb-32 max-w-7xl mx-auto">
+          <div className="max-w-2xl mx-auto p-8 glass-panel border border-outline/10 rounded-xl text-center">
+            <p className="text-on-surface-variant text-lg tracking-wide">No verified contradictions found for {politicianDisplayName || "this politician"}.</p>
+          </div>
+        </section>
+      )}
 
-          {/* Information Display Area */}
-          {politicianInfo && politicianInfo.length > 0 && (
-            <div className="space-y-8">
-              <h2 className="text-3xl font-bold text-center">Contradictions for {politicianDisplayName || "Politician"}</h2>
+      {/* Results Area / Contradiction Grid */}
+      {politicianInfo && politicianInfo.length > 0 && (
+        <section className="relative px-6 pb-32 max-w-7xl mx-auto">
+          <div className="flex items-center justify-between mb-16 px-4">
+            <h2 className="font-headline text-3xl italic text-on-surface break-words max-w-[50%]">Contradictions for {politicianDisplayName}</h2>
+            <div className="h-[1px] flex-1 mx-4 md:mx-8 bg-gradient-to-r from-primary/30 to-transparent hidden sm:block"></div>
+            <span className="font-label text-label-sm tracking-[0.2em] uppercase text-on-surface-variant hidden sm:block">Live Intel Feed</span>
+          </div>
 
-              <div className="space-y-6">
-                {politicianInfo.map((contradiction) => (
-                  <Card key={contradiction.contradiction_id} className="bg-white/10 border-white/20 overflow-hidden">
-                    <CardHeader className="bg-white/5">
-                      <CardTitle className="text-xl md:text-2xl">{contradiction.topic}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-6 space-y-4">
-                      <div className="space-y-2">
-                        <h3 className="font-semibold text-white/90">Initial Statement:</h3>
-                        <p className="text-white/80 bg-black/20 p-3 rounded-md">{contradiction.statement_1}</p>
-                      </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {politicianInfo.map((contradiction) => (
+              <div key={contradiction.contradiction_id} className="group flex flex-col surface-container-high rounded-xl overflow-hidden hover:scale-[1.02] transition-transform duration-500 border-t border-l border-outline/10 glass-panel">
+                <div className="p-8 flex flex-col h-full">
+                  <div className="flex justify-between items-start mb-6">
+                    <h3 className="font-headline text-xl text-on-surface">{contradiction.topic}</h3>
+                  </div>
 
-                      <div className="space-y-2">
-                        <h3 className="font-semibold text-white/90">Contradicting Statement:</h3>
-                        <p className="text-white/80 bg-black/20 p-3 rounded-md">{contradiction.statement_2}</p>
-                      </div>
+                  {/* Initial Statement */}
+                  <div className="bg-surface-container-low/50 p-4 rounded-lg mb-4 border-l-2 border-primary/40">
+                    <span className="font-label text-[10px] uppercase tracking-widest text-primary/70 block mb-2">Initial Statement</span>
+                    <p className="font-body text-sm text-on-surface leading-relaxed italic">"{contradiction.statement_1}"</p>
+                  </div>
 
-                      <div className="space-y-2">
-                        <h3 className="font-semibold text-white/90">Summary:</h3>
-                        <p className="text-white/80 italic">{contradiction.summary}</p>
-                      </div>
-                    </CardContent>
+                  {/* Contradicting Statement */}
+                  <div className="bg-surface-container-highest/40 p-4 rounded-lg mb-6 border-l-2 border-secondary/40 flex-1">
+                    <span className="font-label text-[10px] uppercase tracking-widest text-secondary/70 block mb-2">Contradiction</span>
+                    <p className="font-body text-sm text-on-surface leading-relaxed italic">"{contradiction.statement_2}"</p>
+                  </div>
 
-                    <CardFooter className="flex flex-col items-start border-t border-white/10 bg-white/5">
-                      <h3 className="font-semibold text-white/90 mb-2">Sources:</h3>
-                      <ul className="space-y-1 w-full">
-                        {contradiction.articles.map((article, index) => (
-                          <li key={index} className="truncate">
-                            <a
-                              href={article}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-white/70 hover:text-white flex items-center"
-                            >
-                              <ExternalLink className="h-3 w-3 mr-2 flex-shrink-0" />
-                              <span className="truncate">{article}</span>
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardFooter>
-                  </Card>
-                ))}
+                  {/* Summary */}
+                  <div className="mb-6">
+                    <p className="font-body text-xs text-on-surface-variant italic leading-relaxed">
+                      {contradiction.summary}
+                    </p>
+                  </div>
+
+                  {/* Sources */}
+                  <div className="pt-6 border-t border-outline/5 flex flex-wrap gap-3">
+                    {contradiction.articles.map((article, index) => (
+                      <a
+                        key={index}
+                        href={article}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-outline hover:text-primary transition-colors flex items-center gap-1"
+                        title={article}
+                      >
+                        <span className="material-symbols-outlined text-sm">open_in_new</span>
+                        <span className="text-[10px] font-label uppercase truncate max-w-[100px]">Source {index + 1}</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
-          )}
-        </main>
-      </>
+            ))}
+          </div>
+        </section>
+      )}
+    </main>
   )
 }
