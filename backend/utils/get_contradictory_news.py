@@ -27,7 +27,7 @@ Your job:
 
 Rules:
 - You MUST perform web search before producing any output.
-- Return between 0 and 5 distinct contradictions.
+- Return between 0 and 10 distinct contradictions.
 - Each contradiction must list at least 2 source article URLs in the "articles" field.
 - Prefer reputable, primary or well-established news sources.
 - If no credible contradiction can be verified, return {"contradictions": []}.
@@ -334,8 +334,7 @@ def get_contradiction_news(politician_name: str) -> Dict[str, Any]:
                 break
 
             # If nothing changed after validation, we're done
-            if len(verified_list) == len(contradictions_to_validate):
-                current_contradictions = validated
+            if len(validated["contradictions"]) >= len(current_contradictions["contradictions"]):
                 break
 
             # Some contradictions were filtered out; update and loop again
