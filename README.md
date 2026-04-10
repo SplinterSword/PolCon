@@ -1,95 +1,133 @@
 # PolCon
 
-We live in very uncertain and turbulant times. We need to be prepared for the worst and be able to handle the best. The only thing that has the power to change our futures is our ability to vote.
-It is important that we make sure that we choose the right person to lead us to the future.
+PolCon is a web application for researching public contradictions made by political figures. Enter a politician's name, and PolCon asks the backend to search for well-sourced contradictions, validate the sources, and return a structured list with summaries and article links.
 
-In my opinion the best way to judge a person is to look at their past actions and see whether they were able to uphold their promises.
+The goal is to make political research faster and easier to review, while still keeping the source articles visible so users can verify the information themselves.
 
-PolCon is a web application that helps you to just that with a simple and easy to use interface which allows us to see these political figures for what they truely are and make an informed voting decision.
+## Important Links
 
-## Problem that I am trying to solve
+- [Live app](https://pol-con.vercel.app/)
+- [GitHub repository](https://github.com/SplinterSword/PolCon)
 
-During elections people are often asked to vote for a politician, but they are often not sure which politician is the best one to vote for because of the lack of information about their past.
-Acquiring this information usually takes hours of research which discourages most people from looking for the information at all.
-This leads people following the words of their politicians blindly and often vote for the wrong person.
+## How It Works
 
-Polcon does all the heavy lifting for you so you don't have to spend time and energy researching the information and gives you the information you need to make an informed decision.
+1. The Next.js frontend collects the politician name from the user.
+2. The frontend sends a `POST` request to the FastAPI backend at `/getContradictions`.
+3. The backend uses an OpenAI-compatible Responses API client with web search to find possible contradictions.
+4. The backend formats results with a strict JSON schema and runs a validation pass against the source URLs.
+5. The frontend displays verified contradictions, summaries, and source article links.
 
-## How to use PolCon
-
-1. Visit the url = https://pol-con.vercel.app/.
-2. Enter the name of the political figure you want to research in the input field.
-3. Click on the "Get Information" button.
-4. Wait for the information to load.
-5. Read the information and make an informed decision.
-
-## Technologies Used
+## Tech Stack
 
 ### Frontend
 
-#### Next.js
-
-Next.js is a powerful React framework that supports server-side rendering (SSR), static site generation (SSG), and API routes out of the box. This results in faster load times, better SEO, and an overall improved user experience. It's ideal for performance-critical web apps.
-
-#### TailwindCSS
-
-TailwindCSS is a utility-first CSS framework that allows developers to design UIs directly within their markup using predefined utility classes. This approach improves development speed, ensures design consistency, and eliminates the need for writing custom CSS for every component.
-
-#### React.js
-
-React provides a component-based architecture that makes it easy to create reusable UI components. Its virtual DOM and reactive state updates help in building interactive, efficient, and scalable interfaces. React is also widely adopted and well-supported by the community.
-
-#### TypeScript
-
-TypeScript adds static typing to JavaScript, helping catch errors early in development. It improves code readability and maintainability in larger projects by enforcing contracts within the code, which is especially helpful in team collaborations and refactoring.
-
-#### Vercel
-
-Vercel is the official deployment platform for Next.js, offering zero-configuration hosting with global CDN support. It enables continuous deployment, preview environments for every push, and quick rollbacks. Vercel is perfect for deploying modern, fast, and reliable frontend apps.
+- [Next.js](https://nextjs.org/) 15
+- [React](https://react.dev/) 19
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Radix UI](https://www.radix-ui.com/) primitives and shadcn-style UI configuration
+- [Lucide React](https://lucide.dev/)
+- [Vercel](https://vercel.com/) for the linked frontend deployment
 
 ### Backend
 
-#### Python
+- [Python](https://www.python.org/) 3.10
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [Pydantic](https://docs.pydantic.dev/)
+- [OpenAI Python SDK](https://github.com/openai/openai-python) with an OpenAI-compatible base URL
+- Docker for containerized backend deployment
 
-Python is known for its simplicity, readability, and rich ecosystem of libraries. It's great for rapid backend development and is also well-suited for integrating machine learning and natural language processing capabilities later in the project.
+## Running Locally
 
-#### FastAPI
+### 1. Clone the repository
 
-FastAPI is a modern, asynchronous web framework designed for building APIs with Python. It offers automatic OpenAPI documentation, high performance comparable to Node.js and Go, and supports Python type hints for data validation, which improves both development and debugging.
+```bash
+git clone https://github.com/SplinterSword/PolCon.git
+cd PolCon
+```
 
-#### Pydantic
+### 2. Start the backend
 
-Pydantic is used with FastAPI to validate and serialize incoming data based on Python type annotations. This ensures that API inputs and outputs are consistent and safe, reducing the chances of runtime errors and improving data handling efficiency.
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
 
-#### Docker
+Create a backend `.env` file before starting the API:
 
-Docker containerizes the backend, making it portable across environments. It ensures that the app runs the same way in development, testing, and production. Docker also simplifies deployment and scaling, which is essential for cloud-native applications.
+```env
+OPENAI_API_KEY=your_api_key
+OPENAI_MODEL=your_model_name
+OPENAI_BASE_URL=https://api.openai.com/v1
+```
 
-#### Toolhouse AI Agents
+Supported aliases are `AI_API_KEY`, `AI_MODEL_NAME`, and `AI_URL`. Optional tuning variables include `AI_MIN_INTERVAL_SECONDS`, `AI_MAX_RETRIES`, `AI_RETRY_BASE_BACKOFF_SECONDS`, and `AI_RETRY_MAX_BACKOFF_SECONDS`.
 
-Toolhouse AI Agents provide powerful natural language processing capabilities to analyze and extract contradictions from political statements. They enable the system to process and present complex information in an easily understandable format.
+### 3. Start the frontend
 
-#### Google Cloud
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-Google Cloud provides scalable infrastructure, managed services, and robust security. It supports deploying Docker containers, automates infrastructure management, and offers built-in monitoring/logging. It's an ideal choice for hosting production-ready APIs with global access and high availability.
+Create a frontend `.env.local` file so the browser can reach the backend:
 
-## How to the app locally
+```env
+NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
+```
 
-- Clone the repository: `git clone https://github.com/SplinterSword/PolCon.git`
-- Navigate to the project directory: `cd PolCon`
+Open [http://localhost:3000](http://localhost:3000) to use the app locally.
 
-### Frontend
+## API Reference
 
-1. Navigate to the frontend directory: `cd frontend`
-2. Install dependencies: `npm install`
-3. Start the development server: `npm run dev`
+### `GET /`
 
-### Backend
+Returns a simple backend health/welcome message.
 
-1. Navigate to the backend directory: `cd backend`
-2. Install dependencies: `pip install -r requirements.txt`
-3. Start the development server: `uvicorn main:app --reload`
+### `POST /getContradictions`
+
+Request body:
+
+```json
+{
+  "name": "Politician Name"
+}
+```
+
+Response shape:
+
+```json
+{
+  "contradictions": [
+    {
+      "contradiction_id": 1,
+      "topic": "Topic name",
+      "statement_1": "Initial statement",
+      "statement_2": "Contradicting statement",
+      "summary": "Short explanation",
+      "articles": ["https://example.com/source-1", "https://example.com/source-2"]
+    }
+  ]
+}
+```
+
+FastAPI also exposes local interactive docs at [http://localhost:8000/docs](http://localhost:8000/docs) when the backend is running.
+
+## Docker Backend
+
+From the `backend` directory:
+
+```bash
+docker build -t polcon-backend .
+docker run --env-file .env -p 8000:8000 polcon-backend
+```
+
+When deploying the frontend, set `NEXT_PUBLIC_BACKEND_URL` to the deployed backend URL.
 
 ## Contributing
 
-If you have any suggestions or feedback, please don't hesitate to [open an issue](https://github.com/SplinterSword/PolCon/issues) or [create a pull request](https://github.com/SplinterSword/PolCon/pulls).
+Suggestions and feedback are welcome. Please [open an issue](https://github.com/SplinterSword/PolCon/issues) or [create a pull request](https://github.com/SplinterSword/PolCon/pulls).
